@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+data:
+  config: |
+    [DEFAULT]
+    LogLevel = DEBUG
+    [DATABASE]
+    Address = mysql
+    Port = 3306
+    Database = my_app
+    User = root
+    Password = root
+    [VAULT]
+    Enabled = False
+metadata:
+  name: config
+  namespace: default
+---

@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  type: NodePort
+  selector:
+    app: webapp
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 5000
+      targetPort: 5000
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+      nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-status: "update"
+        vault.hashicorp.com/namespace: "dev"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/secret-volume-path: "/usr/src/app/config"
+        vault.hashicorp.com/agent-inject-secret-config.ini: "data_protection/database/roles/vault-demo-app"
+        vault.hashicorp.com/agent-inject-template-config.ini: |
+          [DEFAULT]
+          LogLevel = DEBUG
+      
+          [DATABASE]
+          Address=mysql
+          Port=3306
+          {{ with secret "data_protection/database/creds/vault-demo-app" -}}
+          User={{ .Data.username }}
+          Password={{ .Data.password }}
+          {{- end }}
+          Database=my_app
+      
+          
+          [VAULT]
+          Enabled = True
+          InjectToken = True
+          DynamicDBCreds = False
+          ProtectRecords = False
+          Address = http://vault:8200
+          Namespace = dev
+          KeyPath = data_protection/transit
+          KeyName = customer-key
+          Transform = True
+          TransformPath = data_protection/transform
+          SSNRole = ssn
+          TransformMaskingPath = data_protection/masking/transform
+          CCNRole = ccn
+        vault.hashicorp.com/role: "myrole"
+      labels:
+        app: webapp
+    spec:
+      serviceAccountName: webapp-sa
+      automountServiceAccountToken: true
+      containers:
+        # The consul-template container will pull secrets from Vault and expose
+        # them as files on disk.
+      - name: webapp
+        image: kaparora/vault-demo-webapp:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
