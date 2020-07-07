@@ -1,1 +1,1 @@
-# vault-k8s-demo-python--mysql-webapp
+# vault-k8s-demo-python-mysql-webapp
