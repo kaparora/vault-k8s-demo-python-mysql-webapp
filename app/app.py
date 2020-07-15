@@ -36,7 +36,7 @@ def read_vault_token():
   with open('config/token') as f:
     token = f.read()
     f.close()
-  return token
+  return token.strip()
 
 @app.route('/customers', methods=['GET'])
 def get_customers():

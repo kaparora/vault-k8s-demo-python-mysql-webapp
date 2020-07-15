@@ -70,6 +70,7 @@ class DbClient:
         else:
             logger.warn("Connecting to vault server: {}".format(addr))
             self.vault_client = hvac.Client(url=addr, token=token, namespace=namespace)
+            logging.debug("Vault-token: {}".format(token))
             self.key_name = key_name
             self.mount_point = path
             self.transform_mount_point = transform_path
