@@ -11,7 +11,7 @@ vault secrets enable  -path=data_protection/transform transform
 #Define a rol ssn with transformation ssn
 vault write data_protection/transform/role/ssn transformations=ssn
 
-#create a transformation of type fpe using built in template for social security number and assign role ssn to it that we created earlier
+#create a transformation of type format preserving encryption using built in template for social security number and assign role ssn to it that we created earlier
 vault write data_protection/transform/transformation/ssn type=fpe template=builtin/socialsecuritynumber tweak_source=internal allowed_roles=ssn
 #test if the transformation was created successfully
 vault list data_protection/transform/transformation

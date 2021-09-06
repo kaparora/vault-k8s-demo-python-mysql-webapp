@@ -23,6 +23,7 @@ vault auth enable kubernetes
 
 #configure with values extracted from the sa
 vault write auth/kubernetes/config \
+        issuer="https://kubernetes.default.svc.cluster.local" \
         token_reviewer_jwt="$SA_JWT_TOKEN" \
         kubernetes_host="$K8S_URL" \
         kubernetes_ca_cert="$SA_CA_CRT"
