@@ -11,4 +11,6 @@ server:
     nodePort: 30000
   image:
     repository: "hashicorp/vault-enterprise"
-    tag: "1.4.2_ent"
+    tag: "1.8.1_ent"
+  enterpriseLicense:
+    secretName: vault-ent-license
