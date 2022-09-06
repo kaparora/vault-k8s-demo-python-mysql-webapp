@@ -10,6 +10,7 @@ helm delete mysql
 helm delete vault
 kubectl delete serviceaccount webapp-sa
 kubectl delete sa vault-auth
+kubectl delete -f vault-auth-secret.yaml
 
 
 

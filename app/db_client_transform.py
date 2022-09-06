@@ -206,7 +206,7 @@ class DbClient:
                 else:
                     logger.error(err)
                 logger.debug("Sleeping 5 seconds before retry")
-                time.sleep(5)
+                datetime.sleep(5)
 
     def get_customer_records(self, num = None, raw = None):
         if num is None:
